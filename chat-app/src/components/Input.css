@@ -1,0 +1,15 @@
+.input {
+  border: none;
+  outline: none;
+  flex: 1;
+  /* width: 100%; */
+  font-size: 16px;
+  color: #333;
+}
+
+.input::placeholder {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #797979; /* 원하는 색상으로 설정 */
+}
