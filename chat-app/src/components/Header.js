@@ -1,6 +1,7 @@
 import React from "react";
 import MenuBurgerIcon from "./icons/MenuBurgerIcon";
 import "./Header.css";
+import { useNavigate } from "react-router-dom";
 
 function Header({ toggleDrawer, showDemoButton }) {
   // const headerStyle = {
@@ -21,6 +22,13 @@ function Header({ toggleDrawer, showDemoButton }) {
   //   gap: 16,
   // };
 
+  // const navigate = useNavigate();
+
+  const handleCompanyPolicyClick = () => {
+    // navigate("/company-policy");
+    window.open("/company-policy", "CompanyPolicy", "width=800,height=600");
+  };
+
   return (
     <div className="header">
       <div className="icon-text">
@@ -29,7 +37,10 @@ function Header({ toggleDrawer, showDemoButton }) {
         </div>
         <div className="title">Chat to</div>
       </div>
-      {showDemoButton && <div className="demoButton">시연용</div>}
+      {/* {showDemoButton && <div className="demoButton">시연용</div>} */}
+      <div className="companyPolicyButton" onClick={handleCompanyPolicyClick}>
+        사내규정집
+      </div>
     </div>
   );
 }

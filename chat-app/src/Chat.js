@@ -53,6 +53,8 @@ function Chat() {
   const messagesEndRef = useRef(null); // 스크롤을 위한 ref
   const [expanded, setExpanded] = useState([]);
   const [model, setModel] = useState("GPT-3.5"); // 모델 선택 상태
+  // const [startTime, setStartTime] = useState(null);
+  // const [responseTime, setResponseTime] = useState(null);
 
   useEffect(() => {
     if (firstRender.current) {
@@ -105,6 +107,7 @@ function Chat() {
         newResponse.model,
         newResponse.reference
       );
+      // setResponseTime(new Date()); // 응답 시간 기록
     } catch (error) {
       const errorResponse = {
         text: "Error: " + error.message,
@@ -147,6 +150,8 @@ function Chat() {
     e.preventDefault();
     if (currentMessage.trim() === "") return;
 
+    // setStartTime(new Date()); // 메시지 전송 시간 기록
+    // setResponseTime(null); // 이전 응답 시간 초기화
     addMessage(currentMessage, "user");
     fetchResponse(currentMessage);
     setCurrentMessage("");
@@ -194,6 +199,14 @@ function Chat() {
     minute: "2-digit",
     hour12: true,
   });
+
+  // const formatElapsedTime = (start, end) => {
+  //   if (!start || !end) return null;
+  //   const elapsed = end - start;
+  //   const seconds = Math.floor(elapsed / 1000);
+  //   const milliseconds = elapsed % 1000;
+  //   return `${seconds}.${milliseconds} 초`;
+  // };
 
   return (
     <div className="container">
@@ -304,6 +317,11 @@ function Chat() {
                       )}
                     </>
                   )}
+                  {/* {responseTime && startTime && (
+                    <div className="responseTime">
+                      응답 시간: {formatElapsedTime(startTime, responseTime)}
+                    </div>
+                  )} */}
                 </div>
                 {msg.type === "user" &&
                   loading &&

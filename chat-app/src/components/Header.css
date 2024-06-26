@@ -1,7 +1,7 @@
 .header {
   width: 100%;
   color: #ffffff;
-  padding: 24px;
+  padding: 16px 24px;
   z-index: 1000;
   border-bottom: 1px solid #e0e0e0;
   display: flex;
@@ -56,6 +56,28 @@
 
 @media (max-width: 767px) {
   .demoButton {
+    display: none;
+  }
+}
+
+.companyPolicyButton {
+  border-radius: 20px;
+  border: 1px solid #797979;
+  padding: 12px;
+  background: #ffffff;
+  box-shadow: 0px 1px 1px 0px #0000001a;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 14px;
+  color: #222222;
+  cursor: pointer; /* 커서 모양 변경 */
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .companyPolicyButton {
+    /* font-size: 12px; */
+    /* padding: 8px; */
     display: none;
   }
 }

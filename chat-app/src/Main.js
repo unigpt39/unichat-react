@@ -81,7 +81,11 @@ function Main() {
       <Header toggleDrawer={toggleDrawer} showDemoButton={true} />
       <div className={`content ${isDrawerOpen || isAnimating ? "open" : ""}`}>
         <Drawer isOpen={isDrawerOpen} toggleDrawer={toggleDrawer} />
-        <div className="innerContent">
+        <div
+          className={`innerContent ${
+            isDrawerOpen || isAnimating ? "open" : ""
+          }`}
+        >
           <div className="contentWrapper">
             <div className="symbolContainer">
               <Symbol />
