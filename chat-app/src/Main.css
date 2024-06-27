@@ -13,6 +13,7 @@
   overflow: auto;
   background: #f3f6fb;
   transition: padding 0.3s ease; /* 패딩 애니메이션 추가 */
+  z-index: 1;
 }
 
 .content.open {

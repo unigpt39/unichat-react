@@ -8,10 +8,28 @@
   color: #797979;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
+  z-index: 1000; /* ensure drawer is above backdrop */
 }
 
 .drawer.open {
   transform: translateX(0);
+}
+
+.backdrop {
+  display: none;
+  position: fixed;
+  /* top: 0; */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #00000033;
+  z-index: 999; /* ensure backdrop is below drawer */
+  transition: opacity 0.3s ease;
+}
+
+.backdrop.open {
+  display: block;
+  opacity: 1;
 }
 
 @media (min-width: 768px) {
@@ -29,6 +47,15 @@
     width: 300px;
     position: relative;
     transform: translateX(0);
+  }
+
+  .backdrop {
+    display: none;
+  }
+
+  .backdrop.open {
+    display: none;
+    opacity: 1;
   }
 }
 

@@ -53,14 +53,14 @@ function Chat() {
   const messagesEndRef = useRef(null); // 스크롤을 위한 ref
   const [expanded, setExpanded] = useState([]);
   const [model, setModel] = useState("GPT-3.5"); // 모델 선택 상태
-  // const [startTime, setStartTime] = useState(null);
-  // const [responseTime, setResponseTime] = useState(null);
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
 
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
       if (question) {
-        setMessages([{ text: question, type: "user" }]);
+        setMessages([{ text: question, type: "user", time: new Date() }]);
         fetchResponse(question);
       }
     }
@@ -76,15 +76,17 @@ function Chat() {
     });
   };
 
-  const addMessage = (text, type, model, reference) => {
+  const addMessage = (text, type, model, reference, startTime, endTime) => {
     setMessages((prevMessages) => [
       ...prevMessages,
-      { text, type, model, reference },
+      { text, type, model, reference, time: new Date(), startTime, endTime },
     ]);
   };
 
   const fetchResponse = async (message) => {
     setLoading(true);
+    const start = new Date();
+    setStartTime(start); // 시작 시간 기록
     try {
       // const res = await axios.post("http://192.168.1.10:18001/chatgpt", {
       //   message: decodeURIComponent(message),
@@ -95,31 +97,50 @@ function Chat() {
       const res = await axios.post(url, {
         message: decodeURIComponent(message),
       });
+
+      let answerText = res?.data?.answer;
+
+      if (model === "GPT-4" && answerText.startsWith("Answer: ")) {
+        answerText = answerText.replace("Answer: ", "");
+      }
+
+      const end = new Date();
+      setEndTime(end); // 종료 시간 기록
       const newResponse = {
-        text: res?.data?.answer,
+        // text: res?.data?.answer,
+        text: answerText,
         type: "bot",
         model: model,
         reference: res?.data?.reference,
+        startTime: start,
+        endTime: end,
       };
       addMessage(
         newResponse.text,
         newResponse.type,
         newResponse.model,
-        newResponse.reference
+        newResponse.reference,
+        newResponse.startTime,
+        newResponse.endTime
       );
-      // setResponseTime(new Date()); // 응답 시간 기록
     } catch (error) {
+      const end = new Date();
+      setEndTime(end); // 오류 발생 시에도 종료 시간 기록
       const errorResponse = {
         text: "Error: " + error.message,
         type: "bot",
         model: model,
         reference: null,
+        startTime: start,
+        endTime: end,
       };
       addMessage(
         errorResponse.text,
         errorResponse.type,
         errorResponse.model,
-        errorResponse.reference
+        errorResponse.reference,
+        errorResponse.startTime,
+        errorResponse.endTime
       );
     }
     setLoading(false);
@@ -150,8 +171,8 @@ function Chat() {
     e.preventDefault();
     if (currentMessage.trim() === "") return;
 
-    // setStartTime(new Date()); // 메시지 전송 시간 기록
-    // setResponseTime(null); // 이전 응답 시간 초기화
+    const start = new Date();
+    setStartTime(start); // 메시지 전송 시간 기록
     addMessage(currentMessage, "user");
     fetchResponse(currentMessage);
     setCurrentMessage("");
@@ -200,13 +221,13 @@ function Chat() {
     hour12: true,
   });
 
-  // const formatElapsedTime = (start, end) => {
-  //   if (!start || !end) return null;
-  //   const elapsed = end - start;
-  //   const seconds = Math.floor(elapsed / 1000);
-  //   const milliseconds = elapsed % 1000;
-  //   return `${seconds}.${milliseconds} 초`;
-  // };
+  const formatElapsedTime = (start, end) => {
+    if (!start || !end) return null;
+    const elapsed = end - start;
+    const seconds = Math.floor(elapsed / 1000);
+    const milliseconds = elapsed % 1000;
+    return `${seconds}.${milliseconds} 초`;
+  };
 
   return (
     <div className="container">
@@ -285,43 +306,18 @@ function Chat() {
                         onClick={() => handleToggleExpand(index)}
                       >
                         <span>RAG</span>
-                        {expanded[index] ? (
-                          // <svg
-                          //   width="16"
-                          //   height="16"
-                          //   viewBox="0 0 24 24"
-                          //   fill="none"
-                          //   xmlns="http://www.w3.org/2000/svg"
-                          // >
-                          //   <path d="M12 8L6 14H18L12 8Z" fill="currentColor" />
-                          // </svg>
-                          <ShrinkIcon />
-                        ) : (
-                          // <svg
-                          //   width="16"
-                          //   height="16"
-                          //   viewBox="0 0 24 24"
-                          //   fill="none"
-                          //   xmlns="http://www.w3.org/2000/svg"
-                          // >
-                          //   <path
-                          //     d="M12 16L6 10H18L12 16Z"
-                          //     fill="currentColor"
-                          //   />
-                          // </svg>
-                          <ExpandIcon />
-                        )}
+                        {expanded[index] ? <ShrinkIcon /> : <ExpandIcon />}
                       </div>
                       {expanded[index] && (
                         <div className="reference">{msg.reference}</div>
                       )}
                     </>
                   )}
-                  {/* {responseTime && startTime && (
+                  {msg.type === "bot" && msg.startTime && msg.endTime && (
                     <div className="responseTime">
-                      응답 시간: {formatElapsedTime(startTime, responseTime)}
+                      응답 시간: {formatElapsedTime(msg.startTime, msg.endTime)}
                     </div>
-                  )} */}
+                  )}
                 </div>
                 {msg.type === "user" &&
                   loading &&
