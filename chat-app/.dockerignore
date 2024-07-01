@@ -1,0 +1,12 @@
+# .dockerignore
+
+# 특정 파일 제외
+app.jar
+node_modules/
+
+# 특정 확장자 파일 제외
+*.log
+*.tmp
+
+# 특정 디렉토리 제외
+temp/

@@ -11,7 +11,7 @@ function App() {
     // </div>
     <Router>
       <Routes>
-        <Route path="/" element={<Main />} />
+        <Route path="/" element={<Main />} />F
         <Route path="/chat/:question" element={<Chat />} />
         <Route path="/company-policy" element={<CompanyPolicy />} />
       </Routes>

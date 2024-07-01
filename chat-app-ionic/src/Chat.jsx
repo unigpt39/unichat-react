@@ -12,6 +12,9 @@ import LoadingDots from "./components/LoadingDots";
 import ShrinkIcon from "./components/icons/ShrinkIcon";
 import ExpandIcon from "./components/icons/ExpandIcon";
 
+// ionic 관련
+import { IonContent, IonPage, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
+
 // TextDisplay 컴포넌트 추가
 const TextDisplay = ({ text }) => {
   return (
@@ -147,84 +150,100 @@ function Chat() {
 
 
   return (
-    <div className="container">
-      <Header />
-      <div className="chatContent">        
-        <div className="chatWindow">
-          <div className="modelSelector">
-            {/* <label htmlFor="modelSelect">모델 선택:</label> */}
-            <select
-              id="modelSelect"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-            >
-              <option value="GPT-3.5">GPT-3.5</option>
-              <option value="GPT-4">GPT-4</option>
-            </select>
-          </div>
-          <div className="dateTime">
-            {/* {date.toLocaleDateString()} {date.toLocaleTimeString()} */}
-            {formattedDate} {formattedTime}
-          </div>
-          
-          <div className="messagesContainer">
-            {messages.map((msg, index) => (
-              <div key={index} className={`chatBox ${msg.type}`}>
-                {msg.type === "bot" && (
-                  <div className="responseIconContainer">
-                    <ResponseIcon />
-                    <div className="modelLabel">{msg.model}</div>
-                  </div>
-                )}
-                <div className={`message ${msg.type}Box`}>
-                  
-                  <TextDisplay text={msg.text}/>
 
-                  {msg.type === "bot" && (
-                    <>
-                      <div
-                        className="toggleButton"
-                        onClick={() => handleToggleExpand(index)}
-                      >
-                        <span>RAG</span>
-                        {expanded[index] ? (                          
-                          <ShrinkIcon />
-                        ) : (                          
-                          <ExpandIcon />
-                        )}
-                      </div>
-                      {expanded[index] && (
-                        <div className="reference">
-                          <TextDisplay text={msg.reference}/>
-                        </div>
-                      )}
-                    </>
-                  )}
-                 
-                </div>
-                {msg.type === "user" &&
-                  loading &&
-                  index === messages.length - 1 && (
-                    <div className="chatBox loading">
-                      <ResponseIcon />
-                      <LoadingDots />
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Chat</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+
+
+                <div className="container">
+                <Header />
+                <div className="chatContent">        
+                    <div className="chatWindow">
+                    <div className="modelSelector">
+                        {/* <label htmlFor="modelSelect">모델 선택:</label> */}
+                        <select
+                        id="modelSelect"
+                        value={model}
+                        onChange={(e) => setModel(e.target.value)}
+                        >
+                        <option value="GPT-3.5">GPT-3.5</option>
+                        <option value="GPT-4">GPT-4</option>
+                        </select>
                     </div>
-                  )}
-              </div>
-            ))}
-            <div ref={messagesEndRef}></div>
-          </div>
-        </div>
-        <form className="formWrapper" onSubmit={handleSubmit}>
-          <Input
-            value={currentMessage}
-            onChange={(e) => setCurrentMessage(e.target.value)}
-            onSubmit={handleSubmit}
-          />
-        </form>
-      </div>
-    </div>
+                    <div className="dateTime">
+                        {/* {date.toLocaleDateString()} {date.toLocaleTimeString()} */}
+                        {formattedDate} {formattedTime}
+                    </div>
+                    
+                    <div className="messagesContainer">
+                        {messages.map((msg, index) => (
+                        <div key={index} className={`chatBox ${msg.type}`}>
+                            {msg.type === "bot" && (
+                            <div className="responseIconContainer">
+                                <ResponseIcon />
+                                <div className="modelLabel">{msg.model}</div>
+                            </div>
+                            )}
+                            <div className={`message ${msg.type}Box`}>
+                            
+                            <TextDisplay text={msg.text}/>
+
+                            {msg.type === "bot" && (
+                                <>
+                                <div
+                                    className="toggleButton"
+                                    onClick={() => handleToggleExpand(index)}
+                                >
+                                    <span>RAG</span>
+                                    {expanded[index] ? (                          
+                                    <ShrinkIcon />
+                                    ) : (                          
+                                    <ExpandIcon />
+                                    )}
+                                </div>
+                                {expanded[index] && (
+                                    <div className="reference">
+                                    <TextDisplay text={msg.reference}/>
+                                    </div>
+                                )}
+                                </>
+                            )}
+                            
+                            </div>
+                            {msg.type === "user" &&
+                            loading &&
+                            index === messages.length - 1 && (
+                                <div className="chatBox loading">
+                                <ResponseIcon />
+                                <LoadingDots />
+                                </div>
+                            )}
+                        </div>
+                        ))}
+                        <div ref={messagesEndRef}></div>
+                    </div>
+                    </div>
+                    <form className="formWrapper" onSubmit={handleSubmit}>
+                    <Input
+                        value={currentMessage}
+                        onChange={(e) => setCurrentMessage(e.target.value)}
+                        onSubmit={handleSubmit}
+                    />
+                    </form>
+                </div>
+                </div>
+
+        </IonContent>
+    </IonPage>
+
   );
+
+
 }
 
 export default Chat;

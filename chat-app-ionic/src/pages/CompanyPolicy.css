@@ -1,0 +1,15 @@
+.companyPolicy {
+  padding: 24px;
+  background-color: #ffffff;
+  color: #222222;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+@media (max-width: 767px) {
+  .companyPolicy {
+    padding: 16px;
+  }
+}
