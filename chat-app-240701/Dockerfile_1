@@ -1,0 +1,43 @@
+# 베이스 이미지 설정 (Node.js 및 npm 포함)
+FROM node:18-alpine
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# package.json 및 package-lock.json 파일 복사
+COPY package*.json ./
+
+# 의존성 설치
+RUN npm install
+
+# 나머지 소스 코드 복사
+COPY . .
+
+# 빌드 실행
+RUN npm run build
+
+# Nginx 이미지를 기반으로 새로운 빌드 단계 시작
+FROM nginx:stable-alpine
+
+# 빌드된 React 애플리케이션 파일 복사
+# COPY --from=0 /app/build /usr/share/nginx/html
+
+# Nginx 기본 설정 파일 제거
+# RUN rm /etc/nginx/conf.d/default.conf
+
+# Nginx 설정 파일 복사 (필요한 경우)
+# COPY nginx/nginx.conf /etc/nginx/conf.d
+
+# 컨테이너 실행 시 Nginx 시작
+EXPOSE 8080
+# CMD ["nginx", "-g", "daemon off;"]
+
+
+# tail -f /dev/null 명령어는 /dev/null 파일의 끝을 계속해서 읽어들이는 역할을 합니다. 
+# /dev/null은 데이터를 버리는 특수 파일이므로, 이 명령어는 실질적으로 아무 작업도 하지 않으면서 컨테이너를 계속 실행 상태로 유지합니다.
+# 이렇게 수정하면 컨테이너가 시작될 때 Nginx를 자동으로 실행하지 않고, 
+# 사용자가 컨테이너 내부에 접속하여 수동으로 Nginx를 시작할 수 있도록 합니다.
+
+# CMD ["tail", "-f", "/dev/null"]
+
+CMD ["/bin/bash"]
